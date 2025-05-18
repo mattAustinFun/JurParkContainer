@@ -12,30 +12,25 @@ CREATE TABLE IF NOT EXISTS visitors
 ,forename VARCHAR(100)
 ,occupation VARCHAR(100));
 
-
 CREATE TABLE IF NOT EXISTS dinosaur_types
 (dino_type_id INT AUTO_INCREMENT PRIMARY KEY
 ,species_name VARCHAR(100)
 ,short_description VARCHAR(255));
 
-
---Insert staff data
 INSERT INTO staff (surname,forename,role_title,dept) VALUES 
-('Nedry','Dennis','Principal Software Engineer','IT');
-('Hammond','John','CEO','SLT');
-('Wu','Henry','Lead Geneticist','GEN');
-('Arnold','Ray','Head of Operations','OPS');
+('Nedry','Dennis','Principal Software Engineer','IT'),
+('Hammond','John','CEO','SLT'),
+('Wu','Henry','Lead Geneticist','GEN'),
+('Arnold','Ray','Head of Operations','OPS'),
 ('Muldoon','Robert','Game Warden','HR');
 
---Insert visitor data
 INSERT INTO visitors (surname,forename,occupation) VALUES 
-('Gennaro','Donald','Blood Sucking Lawyer');
-('Sattler','Ellie','Paleobotanist');
-('Malcolm','Ian','Chaos Theorist'); 
-('Grant','Alan','Paleontologist');
-('Murphy','Tim','Toast');
-('Murphy','Lex','Hacker'); 
-
+('Gennaro','Donald','Blood Sucking Lawyer'),
+('Sattler','Ellie','Paleobotanist'),
+('Malcolm','Ian','Chaos Theorist'), 
+('Grant','Alan','Paleontologist'),
+('Murphy','Tim','Toast'),
+('Murphy','Lex','Hacker');
 
 INSERT INTO dinosaur_types (species_name, short_description) VALUES
 ('Velociraptor', 'Known for their intelligence and pack hunting behavior.'),
@@ -54,6 +49,5 @@ INSERT INTO dinosaur_types (species_name, short_description) VALUES
 ('Procompsognathus', 'Small, scavenging dinosaurs.'),
 ('Apatosaurus', 'Large, long-necked herbivores.'),
 ('Parasaurolophus', 'Known for its long, curved crest.');
-
 
 commit;

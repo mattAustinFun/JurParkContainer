@@ -15,15 +15,18 @@ services:
       - mariadb_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount SQL script
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin-container
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver-container
     restart: always
     environment:
-      PMA_HOST: mariadb
-      MYSQL_ROOT_PASSWORD: root
+      CB_SERVER_NAME: "Jurassic Park DB"
     ports:
-      - "8080:80"
+      - "8080:8978"
+    depends_on:
+      - mariadb
+    volumes:
+      - ./initial-data-sources.conf:/opt/cloudbeaver/workspace/initial-data-sources.conf:ro
 
 volumes:
   mariadb_data:

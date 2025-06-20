@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: jurparkdb
+      MYSQL_DATABASE: jpdb
       MYSQL_USER: nedry
       MYSQL_PASSWORD: ahahah
     ports:
@@ -20,7 +20,7 @@ services:
     container_name: cloudbeaver-container
     restart: always
     environment:
-      CB_SERVER_NAME: "jurparkdbserver"
+      CB_SERVER_NAME: "jpdbserver"
     ports:
       - "8080:8978"
     depends_on:

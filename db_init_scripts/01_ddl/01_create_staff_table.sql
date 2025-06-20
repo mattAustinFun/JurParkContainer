@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS staff
+(staff_id INT AUTO_INCREMENT PRIMARY KEY
+,surname VARCHAR(100)
+,forename VARCHAR(100)
+,role_title VARCHAR(100)
+,dept VARCHAR(100)); 

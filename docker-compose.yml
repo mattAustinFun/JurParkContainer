@@ -20,7 +20,7 @@ services:
     container_name: cloudbeaver-container
     restart: always
     environment:
-      CB_SERVER_NAME: "Jurassic Park DB"
+      CB_SERVER_NAME: "jurparkdbserver"
     ports:
       - "8080:8978"
     depends_on:

@@ -1,20 +1,20 @@
 --insert dinosaur_types data
-INSERT INTO dinosaur_types (species_name, short_description) VALUES
-('Velociraptor', 'Known for their intelligence and pack hunting behavior.'),
-('Tyrannosaurus rex', 'The iconic apex predator.'),
-('Triceratops', 'Recognizable by its three horns and large frill.'),
-('Stegosaurus', 'Famous for its distinctive back plates and spiked tail.'),
-('Brachiosaurus', 'A massive, long-necked herbivore.'),
-('Dilophosaurus', 'Portrayed with a frill and venom-spitting ability in the novel.'),
-('Gallimimus', 'Fast, ostrich-like dinosaurs.'),
-('Ankylosaurus', 'Armored dinosaurs with a club-like tail.'),
-('Spinosaurus', 'Known for its sail-like structure on its back.'),
-('Pteranodon', 'Large flying reptiles, not technically dinosaurs.'),
-('Iguanodon', 'One of the first dinosaurs ever discovered.'),
-('Allosaurus', 'A large carnivorous dinosaur from the Jurassic period.'),
-('Stegoceras', 'Known for its thick skull and head-butting behavior.'),
-('Procompsognathus', 'Small, scavenging dinosaurs.'),
-('Apatosaurus', 'Large, long-necked herbivores.'),
-('Parasaurolophus', 'Known for its long, curved crest.');
+INSERT INTO dinosaur_types (dino_type_id, species, diet, period) VALUES
+(1, 'Velociraptor', 'Carnivore', 'Cretaceous'),
+(2, 'Tyrannosaurus Rex', 'Carnivore', 'Cretaceous'),
+(3, 'Triceratops', 'Herbivore', 'Cretaceous'),
+(4, 'Stegosaurus', 'Herbivore', 'Jurassic'),
+(5, 'Brachiosaurus', 'Herbivore', 'Jurassic'),
+(6, 'Dilophosaurus', 'Carnivore', 'Jurassic'),
+(7, 'Gallimimus', 'Omnivore', 'Cretaceous'),
+(8, 'Ankylosaurus', 'Herbivore', 'Cretaceous'),
+(9, 'Spinosaurus', 'Carnivore', 'Cretaceous'),
+(10, 'Pteranodon', 'Carnivore', 'Cretaceous'),
+(11, 'Iguanodon', 'Herbivore', 'Cretaceous'),
+(12, 'Allosaurus', 'Carnivore', 'Jurassic'),
+(13, 'Stegoceras', 'Herbivore', 'Cretaceous'),
+(14, 'Procompsognathus', 'Carnivore', 'Jurassic'),
+(15, 'Apatosaurus', 'Herbivore', 'Jurassic'),
+(16, 'Parasaurolophus', 'Herbivore', 'Cretaceous');
 
 COMMIT;

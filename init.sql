@@ -41,13 +41,19 @@ CREATE TABLE IF NOT EXISTS dinosaur_types (
   period VARCHAR(50)
 );
 
--- Insert dinosaur_types data
 INSERT INTO dinosaur_types (dino_type_id, species, diet, period) VALUES
 (1, 'Velociraptor', 'Carnivore', 'Cretaceous'),
 (2, 'Tyrannosaurus Rex', 'Carnivore', 'Cretaceous'),
 (3, 'Triceratops', 'Herbivore', 'Cretaceous'),
 (4, 'Stegosaurus', 'Herbivore', 'Jurassic'),
-(5, 'Brachiosaurus', 'Herbivore', 'Jurassic');
+(5, 'Brachiosaurus', 'Herbivore', 'Jurassic'),
+(6, 'Compsognathus', 'Carnivore', 'Jurassic'),           -- Compy
+(7, 'Dilophosaurus', 'Carnivore', 'Jurassic'),
+(8, 'Gallimimus', 'Omnivore', 'Cretaceous'),
+(9, 'Pteranodon', 'Carnivore', 'Cretaceous'),
+(10, 'Ankylosaurus', 'Herbivore', 'Cretaceous'),
+(11, 'Parasaurolophus', 'Herbivore', 'Cretaceous'),
+(12, 'Spinosaurus', 'Carnivore', 'Cretaceous');
 
 -- Create paddocks table
 CREATE TABLE IF NOT EXISTS paddocks (
@@ -77,11 +83,43 @@ CREATE TABLE IF NOT EXISTS residents (
 
 -- Insert residents data
 INSERT INTO residents (dino_type_id, name, paddock_id, age) VALUES
-(1, 'Blue', 1, 5),
+-- Velociraptors (Raptor Paddock, original book: Alpha, Beta, and The Big One)
+(1, 'Alpha', 1, 6),
+(1, 'Beta', 1, 5),
+(1, 'The Big One', 1, 7),
+-- Tyrannosaurus Rex (T-Rex Kingdom)
 (2, 'Rexy', 2, 12),
-(3, 'Sarah', 3, 7),
-(4, 'Spike', 4, 9),
-(5, 'Big Al', 5, 15);
+-- Triceratops (Brachiosaurus Plains)
+(3, 'Sarah', 5, 7),
+-- Stegosaurus (Brachiosaurus Plains)
+(4, 'Spike', 5, 9),
+-- Brachiosaurus (Brachiosaurus Plains)
+(5, 'Big Al', 5, 15),
+-- Compsognathus (Compy) - spread across all paddocks (34 individuals)
+(6, 'Compy 1', 1, 2), (6, 'Compy 2', 1, 1), (6, 'Compy 3', 1, 3), (6, 'Compy 4', 1, 2),
+(6, 'Compy 5', 2, 1), (6, 'Compy 6', 2, 2), (6, 'Compy 7', 2, 1), (6, 'Compy 8', 2, 3),
+(6, 'Compy 9', 3, 2), (6, 'Compy 10', 3, 1), (6, 'Compy 11', 3, 2), (6, 'Compy 12', 3, 1),
+(6, 'Compy 13', 4, 2), (6, 'Compy 14', 4, 1), (6, 'Compy 15', 4, 2), (6, 'Compy 16', 4, 3),
+(6, 'Compy 17', 5, 1), (6, 'Compy 18', 5, 2), (6, 'Compy 19', 5, 1), (6, 'Compy 20', 5, 2),
+(6, 'Compy 21', 1, 1), (6, 'Compy 22', 2, 2), (6, 'Compy 23', 3, 1), (6, 'Compy 24', 4, 2),
+(6, 'Compy 25', 5, 1), (6, 'Compy 26', 1, 2), (6, 'Compy 27', 2, 1), (6, 'Compy 28', 3, 2),
+(6, 'Compy 29', 4, 1), (6, 'Compy 30', 5, 2), (6, 'Compy 31', 1, 1), (6, 'Compy 32', 2, 2),
+(6, 'Compy 33', 3, 1), (6, 'Compy 34', 4, 2),
+-- Dilophosaurus (Raptor Paddock)
+(7, 'Spitter', 1, 4),
+-- Gallimimus (Brachiosaurus Plains, 12 individuals)
+(8, 'Gallimimus 1', 5, 3), (8, 'Gallimimus 2', 5, 2), (8, 'Gallimimus 3', 5, 4),
+(8, 'Gallimimus 4', 5, 5), (8, 'Gallimimus 5', 5, 3), (8, 'Gallimimus 6', 5, 2),
+(8, 'Gallimimus 7', 5, 4), (8, 'Gallimimus 8', 5, 3), (8, 'Gallimimus 9', 5, 2),
+(8, 'Gallimimus 10', 5, 4), (8, 'Gallimimus 11', 5, 3), (8, 'Gallimimus 12', 5, 2),
+-- Pteranodon (Brachiosaurus Plains)
+(9, 'Ptera', 5, 6),
+-- Ankylosaurus (Brachiosaurus Plains)
+(10, 'Anky', 5, 8),
+-- Parasaurolophus (Brachiosaurus Plains)
+(11, 'Para', 5, 7),
+-- Spinosaurus (T-Rex Kingdom)
+(12, 'Spino', 2, 11);
 
 -- Create motion_sensors table
 CREATE TABLE IF NOT EXISTS motion_sensors (
@@ -132,7 +170,7 @@ CREATE TABLE IF NOT EXISTS sensor_readings (
 );
 
 -- Procedure to add a sensor reading
-DELIMITER $$
+
 CREATE PROCEDURE add_sensor_reading (
     IN p_reading_id INT,
     IN p_sensor_id INT,
@@ -143,17 +181,26 @@ CREATE PROCEDURE add_sensor_reading (
 BEGIN
     INSERT INTO sensor_readings (reading_id, sensor_id, read_date, dino_type_id, reading_count)
     VALUES (p_reading_id, p_sensor_id, p_read_date, p_dino_type_id, p_reading_count);
-END $$
-DELIMITER ;
+END;
 
--- Create a view for paddock resident count
-CREATE OR REPLACE VIEW paddock_resident_count AS
+
+
+-- Create a view for all park residents with paddock and dinosaur details
+CREATE OR REPLACE VIEW vw_park_residents AS
 SELECT
+  r.resident_id,
+  r.name AS resident_name,
+  r.age,
   p.paddock_id,
   p.name AS paddock_name,
-  COUNT(r.resident_id) AS resident_count
+  dt.dino_type_id,
+  dt.species,
+  dt.diet,
+  dt.period
 FROM
-  paddocks p
-LEFT JOIN
-  residents r ON p.paddock_id = r.paddock_id
-GROUP
+  residents r
+JOIN
+  paddocks p ON r.paddock_id = p.paddock_id
+JOIN
+  dinosaur_types dt ON r.dino_type_id = dt.dino_type_id;
+

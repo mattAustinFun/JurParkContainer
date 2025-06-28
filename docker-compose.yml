@@ -28,12 +28,14 @@ services:
       PMA_USER: ${MYSQL_USER}
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       UPLOAD_LIMIT: 64M
-      PMA_THEME: "metro"
+      PMA_THEME: "darkwolf" # Use your theme's folder name
     ports:
       - "8080:80"
     depends_on:
       mariadb:
         condition: service_healthy
+    volumes:
+      - ./themes:/var/www/html/themes
 
 volumes:
   mariadb_data:

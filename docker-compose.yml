@@ -19,25 +19,22 @@ services:
       - mariadb_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Initial SQL script to set up the database
 
-  cloudbeaver:
-    image: dbeaver/cloudbeaver:24.1.0
-    container_name: cloudbeaver-container
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-container
     restart: always
     environment:
-      CB_SERVER_NAME: "jurparkdbserver"
-      CB_ADMIN_NAME: ${CB_ADMIN_NAME}
-      CB_ADMIN_PASSWORD: ${CB_ADMIN_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      PMA_HOST: mariadb
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      UPLOAD_LIMIT: 64M
+      # Optional: Enable dark theme by default (phpMyAdmin 5.2+)
+      PMA_THEME: "metro"
     ports:
-      - "8080:8978"
+      - "8080:80"
     depends_on:
       mariadb:
         condition: service_healthy
-    volumes:
-      - cloudbeaver_workspace:/opt/cloudbeaver/workspace
-      - ./initial-data-sources.conf:/opt/cloudbeaver/conf/initial-data-sources.conf:ro
 
 volumes:
   mariadb_data:
-  cloudbeaver_workspace:

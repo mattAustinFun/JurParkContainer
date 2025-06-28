@@ -17,7 +17,7 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Initial SQL script to set up the database
+      - ./init:/docker-entrypoint-initdb.d
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.2.2
@@ -34,6 +34,22 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+
+  fastapi:
+    build:
+      context: ./app
+    container_name: fastapi-container
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
 
 volumes:

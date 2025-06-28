@@ -3,11 +3,16 @@ services:
     image: mariadb:10.6
     container_name: mariadb-container
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: jurparkdb
-      MYSQL_USER: nedry
-      MYSQL_PASSWORD: ahahah
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -15,17 +20,24 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Initial SQL script to set up the database
 
   cloudbeaver:
-    image: dbeaver/cloudbeaver:latest
+    image: dbeaver/cloudbeaver:24.1.0
     container_name: cloudbeaver-container
     restart: always
     environment:
       CB_SERVER_NAME: "jurparkdbserver"
+      CB_ADMIN_NAME: ${CB_ADMIN_NAME}
+      CB_ADMIN_PASSWORD: ${CB_ADMIN_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8080:8978"
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     volumes:
-      - ./initial-data-sources.conf:/opt/cloudbeaver/workspace/initial-data-sources.conf:ro
+      - cloudbeaver_workspace:/opt/cloudbeaver/workspace
+      - ./initial-data-sources.conf:/opt/cloudbeaver/conf/initial-data-sources.conf:ro
 
 volumes:
   mariadb_data:
+  cloudbeaver_workspace:

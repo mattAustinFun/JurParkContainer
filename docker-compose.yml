@@ -20,7 +20,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Initial SQL script to set up the database
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:5.2.1
+    image: phpmyadmin/phpmyadmin:5.2.2
     container_name: phpmyadmin-container
     restart: always
     environment:
@@ -28,14 +28,13 @@ services:
       PMA_USER: ${MYSQL_USER}
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       UPLOAD_LIMIT: 64M
-      PMA_THEME: "darkwolf" # Use your theme's folder name
+      PMA_THEME: Metro
     ports:
       - "8080:80"
     depends_on:
       mariadb:
         condition: service_healthy
-    volumes:
-      - ./themes:/var/www/html/themes
+
 
 volumes:
   mariadb_data:

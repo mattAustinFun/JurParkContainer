@@ -20,7 +20,7 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Initial SQL script to set up the database
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin:5.2.1
     container_name: phpmyadmin-container
     restart: always
     environment:
@@ -28,7 +28,6 @@ services:
       PMA_USER: ${MYSQL_USER}
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       UPLOAD_LIMIT: 64M
-      # Optional: Enable dark theme by default (phpMyAdmin 5.2+)
       PMA_THEME: "metro"
     ports:
       - "8080:80"

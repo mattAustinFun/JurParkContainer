@@ -1,32 +1,56 @@
-
 services:
   mariadb:
     image: mariadb:10.6
     container_name: mariadb-container
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: jpdb
-      MYSQL_USER: nedry
-      MYSQL_PASSWORD: ahahah
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./db_init_scripts:/docker-entrypoint-initdb.d  # Mount SQL scripts directory
+      - ./init:/docker-entrypoint-initdb.d
 
-  cloudbeaver:
-    image: dbeaver/cloudbeaver:latest
-    container_name: cloudbeaver-container
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2.2
+    container_name: phpmyadmin-container
     restart: always
     environment:
-      CB_SERVER_NAME: "jpdbserver"
+      PMA_HOST: mariadb
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      UPLOAD_LIMIT: 64M
+      PMA_THEME: Metro
     ports:
-      - "8080:8978"
+      - "8080:80"
     depends_on:
-      - mariadb
-    volumes:
-      - ./initial-data-sources.conf:/opt/cloudbeaver/workspace/initial-data-sources.conf:ro
+      mariadb:
+        condition: service_healthy
+
+  fastapi:
+    build:
+      context: .
+    container_name: fastapi-container
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: mariadb
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
 
 volumes:
   mariadb_data:
